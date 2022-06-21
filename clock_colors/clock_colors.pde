@@ -5,11 +5,14 @@ import wellen.*;
  * external MIDI device or an internal MIDI application ).
  */
 
-String MidiInterface = "Elektron Model:Samples";
+//String MidiInterface = "Elektron Model:Samples";
+String MidiInterface = "pro";
+
 
 //////////////
 
 int mColor;
+int switchMode;
 
 BeatMIDI mBeatMIDI;
 
@@ -19,6 +22,8 @@ void setup() {
     
     Wellen.dumpMidiInputDevices();
     mBeatMIDI = BeatMIDI.start(this, MidiInterface);
+    
+    switchMode = 1;
 }
 
 void draw() {
@@ -28,10 +33,16 @@ void draw() {
 void beat(int pBeat) {
     /* MIDI clock runs at 24 pulses per quarter note (PPQ), therefore `pBeat % 12` is triggers eighth note. */
     if (pBeat % 12 == 6) {
+        if (switchMode == 1) {
         mColor = color(random(127, 255),
                        random(127, 255),
                        random(127, 255));
         int mOffset = 4 * ((pBeat / 24) % 8);
+          switchMode = 0;
+        } else {
+          mColor = 0;
+          switchMode = 1;
+        }
         //System.out.println(mBeatMIDI.bpm());
     }
 }
